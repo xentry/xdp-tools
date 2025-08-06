@@ -1,7 +1,7 @@
 Name:             xdp-tools
 Version:          1.5.5
 Release:          1%{?dist}
-Summary:          Utilities and example programs for use with XDP
+Summary:          XDP traffic generator and helper library
 %global _soversion 1.5.0
 
 License:          GPL-2.0-only
@@ -18,9 +18,6 @@ BuildRequires:    llvm >= 10.0.0
 BuildRequires:    make
 BuildRequires:    gcc
 BuildRequires:    pkgconfig
-BuildRequires:    m4
-BuildRequires:    emacs-nox
-BuildRequires:    wireshark-cli
 BuildRequires:    bpftool
 
 ExcludeArch:      i386 i686
@@ -34,7 +31,7 @@ Requires:         libxdp = %{version}-%{release}
 %global _hardened_build 1
 
 %description
-Utilities and example programs for use with XDP
+XDP traffic generator and libxdp helper library
 
 %package -n libxdp
 Summary:          XDP helper library
@@ -77,7 +74,7 @@ export DYNAMIC_LIBXDP=1
 export FORCE_SYSTEM_LIBBPF=1
 export FORCE_EMACS=1
 ./configure
-make %{?_smp_mflags} V=1
+make lib xdp-trafficgen %{?_smp_mflags} V=1
 
 %install
 export DESTDIR='%{buildroot}'
@@ -87,12 +84,12 @@ export RUNDIR='%{_rundir}'
 export MANDIR='%{_mandir}'
 export DATADIR='%{_datadir}'
 export HDRDIR='%{_includedir}/xdp'
-make install V=1
+make libxdp_install V=1
+make -C xdp-trafficgen install V=1
 
 %files
 %{_sbindir}/xdp-trafficgen
 %{_mandir}/man8/*
-%{_datadir}/xdp-tools/
 %license LICENSES/*
 
 %files -n libxdp
