@@ -16,13 +16,9 @@ endif
 include version.mk
 include config.mk
 
-UTILS :=
+UTILS := xdp-trafficgen
 
-ifneq ($(BPFTOOL),)
-UTILS += xdp-trafficgen
-endif
-
-SUBDIRS := lib $(UTILS)
+SUBDIRS := lib xdp-trafficgen
 .PHONY: check_submodule help clobber distclean clean install test libxdp $(SUBDIRS)
 
 all: $(SUBDIRS)
@@ -78,7 +74,7 @@ install: all
 	do $(MAKE) -C $$i install; done
 
 test: all
-	@for i in lib/libxdp $(UTILS); do \
+	@for i in lib/libxdp xdp-trafficgen; do \
 		echo; echo test $$i; $(MAKE) -C $$i test; \
 		if [ $$? -ne 0 ]; then failed="y"; fi; \
 	done; \
