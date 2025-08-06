@@ -1,0 +1,21 @@
+{
+    "name": "C DevContainer (REDOS8)",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "runArgs": [ 
+        "--privileged", 
+        "--ulimit=memlock=-1",
+        "--cap-add=SYS_ADMIN",
+        "--cap-add=SYS_RESOURCE" 
+    ],
+    "mounts":[
+        "source=/sys/fs/bpf,target=/sys/fs/bpf,type=bind,consistency=cached"
+    ],
+    "settings": {},
+    "extensions": [
+        "ms-vscode.cpptools"
+    ],
+    "postCreateCommand": "gcc --version",
+    "postStartCommand": "mountpoint -q /sys/fs/bpf || mount -t bpf bpf /sys/fs/bpf || true"
+}
