@@ -1,23 +1,10 @@
 * xdp-tools - Library and utilities for use with XDP
 
-This repository contains the =libxdp= library for working with the eXpress Data
-Path facility of the Linux kernel, along with the =xdp-trafficgen= utility and
-reusable header code.
+This repository contains the =libxdp= library for working with the eXpress Data Path (XDP) facility of the Linux kernel and the =xdp-trafficgen= utility for generating traffic.
 
-The repository contains the following:
+- [[lib/libxdp/][libxdp]] - XDP helper library. Build it with =./configure && make libxdp=.
+- [[xdp-trafficgen/][xdp-trafficgen]] - XDP-based packet generator. Build it with =./configure && make xdp-trafficgen=.
 
-- [[lib/libxdp/][lib/libxdp/]] - the =libxdp= library itself - can be built standalone using =make libxdp=
-- [[xdp-trafficgen/][xdp-trafficgen/]] - an XDP-based packet generator
-- [[headers/xdp/][headers/xdp/]] - reusable eBPF code snippets for XDP (installed in /usr/include/xdp by =make install=).
-- [[lib/util/][lib/util/]] - common code shared between the different utilities
-- [[packaging/][packaging/]] - files used for distro packaging
-- lib/libbpf/ - a git submodule with [[https://github.com/libbpf/libbpf][libbpf]], used if the system version is not recent enough
+To build both components, run =./configure= followed by =make=. Ensure a recent =libbpf= is available or fetch the bundled submodule with:
 
-To compile, first run =./configure=, then simply type =make=. Make sure you
-either have a sufficiently recent libbpf installed on your system, or that you
-pulled down the libbpf git submodule (=git submodule init && git submodule
-update=).
-
-For a general introduction to XDP, please see the [[https://github.com/xdp-project/xdp-tutorial][XDP tutorial]], and for more BPF
-and XDP examples, see the [[https://github.com/xdp-project/bpf-examples][bpf-examples repository]].
-
+  git submodule update --init --recursive
