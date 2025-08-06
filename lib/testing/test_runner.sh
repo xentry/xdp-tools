@@ -472,12 +472,6 @@ else
     fi
 fi
 
-export XDPDUMP
-export XDP_BENCH
-export XDP_FILTER
-export XDP_FORWARD
-export XDP_LOADER
-export XDP_MONITOR
 export XDP_TRAFFICGEN
 
 TEST_DEFINITIONS="${1:-}"

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
  *  Description:
- *      Simple PcapNG library developed from scratch as no library existed that
- *      met the requirements for xdpdump. It can also be used by other XDP
+ *      Simple PcapNG library developed from scratch to meet the requirements
+ *      of capturing packets at the XDP layer. It can also be used by other XDP
  *      applications that would like to capture packets for debugging purposes.
  */
 

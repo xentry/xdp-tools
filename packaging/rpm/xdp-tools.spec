@@ -90,16 +90,8 @@ export HDRDIR='%{_includedir}/xdp'
 make install V=1
 
 %files
-%{_sbindir}/xdp-bench
-%{_sbindir}/xdp-filter
-%{_sbindir}/xdp-forward
-%{_sbindir}/xdp-loader
-%{_sbindir}/xdp-monitor
 %{_sbindir}/xdp-trafficgen
-%{_sbindir}/xdpdump
 %{_mandir}/man8/*
-%{_libdir}/bpf/xdpfilt_*.o
-%{_libdir}/bpf/xdpdump_*.o
 %{_datadir}/xdp-tools/
 %license LICENSES/*
 

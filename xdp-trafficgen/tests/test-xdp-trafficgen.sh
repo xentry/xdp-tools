@@ -1,4 +1,3 @@
-XDP_LOADER=${XDP_LOADER:-./xdp-loader}
 XDP_TRAFFICGEN=${XDP_TRAFFICGEN:-./xdp-trafficgen}
 ALL_TESTS="test_udp test_tcp test_no_support"
 
@@ -67,6 +66,6 @@ test_no_support()
 
 cleanup_tests()
 {
-    $XDP_LOADER unload $NS --all >/dev/null 2>&1
-    $XDP_LOADER clean >/dev/null 2>&1
+    ip link set dev $NS xdpgeneric off >/dev/null 2>&1 || true
+    ip link del dev xdptest0 >/dev/null 2>&1 || true
 }
