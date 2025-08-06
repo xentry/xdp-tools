@@ -1,18 +1,12 @@
 * xdp-tools - Library and utilities for use with XDP
 
 This repository contains the =libxdp= library for working with the eXpress Data
-Path facility of the Linux kernel, and a collection of utilities and example
-code that uses the library.
+Path facility of the Linux kernel, along with the =xdp-trafficgen= utility and
+reusable header code.
 
 The repository contains the following:
 
 - [[lib/libxdp/][lib/libxdp/]] - the =libxdp= library itself - can be built standalone using =make libxdp=
-- [[xdp-bench/][xdp-bench/]] - an XDP benchmarking tool
-- [[xdp-dump/][xdp-dump/]] - a tcpdump-like tool for capturing packets at the XDP layer
-- [[xdp-filter/][xdp-filter/]] - a simple packet filtering utility powered by XDP
-- [[xdp-forward/][xdp-forward/]] - an XDP forwarding plane
-- [[xdp-loader/][xdp-loader/]] - a command-line utility for loading XDP programs using =libxdp=
-- [[xdp-monitor/][xdp-monitor/]] - a simple XDP tracepoint monitoring tool
 - [[xdp-trafficgen/][xdp-trafficgen/]] - an XDP-based packet generator
 - [[headers/xdp/][headers/xdp/]] - reusable eBPF code snippets for XDP (installed in /usr/include/xdp by =make install=).
 - [[lib/util/][lib/util/]] - common code shared between the different utilities

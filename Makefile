@@ -16,10 +16,10 @@ endif
 include version.mk
 include config.mk
 
-UTILS := xdp-filter xdp-loader xdp-dump
+UTILS :=
 
 ifneq ($(BPFTOOL),)
-UTILS += xdp-bench xdp-forward xdp-monitor xdp-trafficgen
+UTILS += xdp-trafficgen
 endif
 
 SUBDIRS := lib $(UTILS)
