@@ -85,7 +85,7 @@ export MANDIR='%{_mandir}'
 export DATADIR='%{_datadir}'
 export HDRDIR='%{_includedir}/xdp'
 make libxdp_install V=1
-make -C xdp-trafficgen install V=1
+make xdp-trafficgen_install V=1
 
 %files
 %{_sbindir}/xdp-trafficgen
