@@ -1,4 +1,3 @@
-
 # SPDX-License-Identifier: GPL-2.0
 # Top level Makefile for xdp-tools
 
@@ -14,7 +13,14 @@ MAKEFLAGS += --no-print-directory
 endif
 
 include version.mk
+
+ifneq ($(wildcard config.mk),)
 include config.mk
+else
+ifeq (,$(filter config.mk,$(MAKECMDGOALS)))
+$(error config.mk is missing. Please run ./configure and ensure required prerequisites are installed)
+endif
+endif
 
 SUBDIRS := lib
 .PHONY: check_submodule help clobber distclean clean install test libxdp $(SUBDIRS)
@@ -46,12 +52,14 @@ config.mk: configure
 	sh configure
 
 check_submodule:
-	@if [ -d .git ] && `git submodule status lib/libbpf | grep -q '^+'`; then \
-		echo "" ;\
-		echo "** WARNING **: git submodule SHA-1 out-of-sync" ;\
-		echo " consider running: git submodule update"  ;\
-		echo "" ;\
-	fi
+        @if [ -d .git ]; then \
+                if git submodule status lib/libbpf | grep -q '^+'; then \
+                        echo ""; \
+                        echo "** WARNING **: git submodule SHA-1 out-of-sync"; \
+                        echo " consider running: git submodule update"; \
+                        echo ""; \
+                fi; \
+        fi
 
 clobber:
 	touch config.mk
