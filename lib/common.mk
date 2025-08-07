@@ -29,11 +29,6 @@ LDLIBS += -lm
 include $(LIB_DIR)/defines.mk
 include $(LIB_DIR)/libxdp/libxdp.mk
 
-# get list of objects in util
-include $(LIB_DIR)/util/util.mk
-
-# Extend if including Makefile already added some
-LIB_OBJS += $(foreach obj,$(UTIL_OBJS),$(LIB_DIR)/util/$(obj))
 
 EXTRA_DEPS +=
 EXTRA_USER_DEPS +=
@@ -57,8 +52,8 @@ LIBXDP_SOURCES := $(wildcard $(LIBXDP_DIR)/*.[ch] $(LIBXDP_DIR)/*.in)
 # BPF-prog kern and userspace shares struct via header file:
 KERN_USER_H ?= $(wildcard common_kern_user.h)
 
-CFLAGS += -I$(HEADER_DIR) -I$(LIB_DIR)/util $(ARCH_INCLUDES)
 BPF_CFLAGS += -I$(HEADER_DIR) $(ARCH_INCLUDES)
+CFLAGS += -I$(HEADER_DIR) $(ARCH_INCLUDES)
 
 BPF_HEADERS := $(wildcard $(HEADER_DIR)/bpf/*.h) $(wildcard $(HEADER_DIR)/xdp/*.h)
 

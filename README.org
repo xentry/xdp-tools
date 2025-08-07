@@ -1,10 +1,9 @@
-* xdp-tools - Library and utilities for use with XDP
+* xdp-tools - Library for use with XDP
 
-This repository contains the =libxdp= library for working with the eXpress Data Path (XDP) facility of the Linux kernel and the =xdp-trafficgen= utility for generating traffic.
+This repository contains the =libxdp= library for working with the eXpress Data Path (XDP) facility of the Linux kernel.
 
 - [[lib/libxdp/][libxdp]] - XDP helper library. Build it with =./configure && make libxdp=.
-- [[xdp-trafficgen/][xdp-trafficgen]] - XDP-based packet generator. Build it with =./configure && make xdp-trafficgen=.
 
-To build both components, run =./configure= followed by =make=. Ensure a recent =libbpf= is available or fetch the bundled submodule with:
+To build the library, run =./configure= followed by =make libxdp=. Ensure a recent =libbpf= is available or fetch the bundled submodule with:
 
   git submodule update --init --recursive

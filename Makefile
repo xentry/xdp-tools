@@ -16,9 +16,7 @@ endif
 include version.mk
 include config.mk
 
-UTILS := xdp-trafficgen
-
-SUBDIRS := lib xdp-trafficgen
+SUBDIRS := lib
 .PHONY: check_submodule help clobber distclean clean install test libxdp $(SUBDIRS)
 
 all: $(SUBDIRS)
@@ -31,9 +29,6 @@ libxdp: config.mk check_submodule
 
 libxdp_install: libxdp
 	@$(MAKE) -C lib $@
-
-$(UTILS): lib
-	@echo; echo $@; $(MAKE) -C $@
 
 help:
 	@echo "Make Targets:"
@@ -74,7 +69,7 @@ install: all
 	do $(MAKE) -C $$i install; done
 
 test: all
-	@for i in lib/libxdp xdp-trafficgen; do \
+	@for i in lib/libxdp; do \
 		echo; echo test $$i; $(MAKE) -C $$i test; \
 		if [ $$? -ne 0 ]; then failed="y"; fi; \
 	done; \

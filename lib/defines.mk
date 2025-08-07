@@ -22,7 +22,6 @@ BPF_OBJECT_DIR ?=$(LIBDIR)/bpf
 MAX_DISPATCHER_ACTIONS ?=10
 
 HEADER_DIR = $(LIB_DIR)/../headers
-TEST_DIR = $(LIB_DIR)/testing
 LIBXDP_DIR := $(LIB_DIR)/libxdp
 LIBBPF_DIR := $(LIB_DIR)/libbpf
 

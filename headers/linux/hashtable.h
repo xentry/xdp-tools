@@ -15,7 +15,6 @@
 #include <linux/kernel.h>
 #include <linux/compiler.h>
 
-#include "../lib/util/util.h"
 
 #define HASH_GOLDEN_RATIO_32 0x61C88647
 #define HASH_GOLDEN_RATIO_64 0x61C8864680B583EBull
