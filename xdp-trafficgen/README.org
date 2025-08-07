@@ -19,7 +19,14 @@ XDP-trafficgen supports generating UDP traffic with fixed or dynamic destination
 ports, and also has basic support for generating dummy TCP traffic on a single
 flow.
 
-** Running xdp-traffigen
+** Building and dependencies
+The source tree keeps helper code in the =util/= subdirectory. Building requires a recent LLVM/clang toolchain, =pkg-config=, =libelf= and =zlib=. From the repository root run:
+
+  git submodule update --init --recursive
+  ./configure
+  make xdp-trafficgen
+
+** Running xdp-trafficgen
 The syntax for running xdp-trafficgen is:
 
 #+begin_src sh
