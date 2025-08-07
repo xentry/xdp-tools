@@ -13,7 +13,14 @@ MAKEFLAGS += --no-print-directory
 endif
 
 include version.mk
+
+ifneq ($(wildcard config.mk),)
 include config.mk
+else
+ifeq (,$(filter config.mk,$(MAKECMDGOALS)))
+$(error config.mk is missing. Please run ./configure and ensure required prerequisites are installed)
+endif
+endif
 
 UTILS := xdp-trafficgen
 
