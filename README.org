@@ -7,3 +7,9 @@ This repository contains the =libxdp= library for working with the eXpress Data 
 To build the library, run =./configure= followed by =make libxdp=. Ensure a recent =libbpf= is available or fetch the bundled submodule with:
 
   git submodule update --init --recursive
+
+Run the usual autotools build from the repository root:
+
+  ./configure
+  make              # build everything
+  make libxdp       # build only the library
