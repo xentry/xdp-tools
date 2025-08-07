@@ -46,7 +46,7 @@ clean::
 	$(Q)rm -f $(USER_TARGETS) $(USER_OBJ)
 
 $(OBJECT_LIBXDP): $(LIBXDP_SOURCES)
-        $(Q)$(MAKE) -C $(LIBXDP_DIR)
+	$(Q)$(MAKE) -C $(LIBXDP_DIR)
 
 # Create expansions for dependencies
 LIB_H := ${LIB_OBJS:.o=.h}
