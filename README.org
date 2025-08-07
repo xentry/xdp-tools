@@ -2,9 +2,11 @@
 
 This repository contains the =libxdp= library for working with the eXpress Data Path (XDP) facility of the Linux kernel.
 
+** Repository layout
 - [[lib/libxdp/][libxdp]] - XDP helper library. Build it with =./configure && make libxdp=.
 
-To build the library, run =./configure= followed by =make libxdp=. Ensure a recent =libbpf= is available or fetch the bundled submodule with:
+** Building
+The project requires a modern LLVM/clang toolchain, =libelf=, =pkg-config= and =zlib=. If =libbpf= is not installed, fetch the bundled submodule with:
 
   git submodule update --init --recursive
 
