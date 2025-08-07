@@ -14,6 +14,8 @@ USER_LIBS     = -lpthread
 TEST_FILE := tests/test-xdp-trafficgen.sh
 
 LIB_DIR = ../lib
+LIB_OBJS += util/logging.o util/params.o util/stats.o util/util.o util/xpcapng.o \
+            util/xdp_sample.o
 
 include $(LIB_DIR)/common.mk
 
