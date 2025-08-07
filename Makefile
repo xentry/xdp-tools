@@ -24,10 +24,10 @@ endif
 
 UTILS := xdp-trafficgen
 
-SUBDIRS := lib xdp-trafficgen
-.PHONY: check_submodule help clobber distclean clean install test libxdp $(SUBDIRS)
+SUBDIRS := lib
+.PHONY: check_submodule help clobber distclean clean install test libxdp $(SUBDIRS) $(UTILS) xdp-trafficgen_install
 
-all: $(SUBDIRS)
+all: $(SUBDIRS) $(UTILS)
 
 lib: config.mk check_submodule
 	@echo; echo $@; $(MAKE) -C $@
@@ -39,19 +39,19 @@ libxdp_install: libxdp
 	@$(MAKE) -C lib $@
 
 $(UTILS): lib
-	@echo; echo $@; $(MAKE) -C $@
+	@echo; echo $@; $(MAKE) -f $@.mk
 
 help:
 	@echo "Make Targets:"
-	@echo " all                 - build binaries"
-	@echo " clean               - remove products of build"
-	@echo " distclean           - remove configuration and build"
-	@echo " install             - install binaries on local machine"
-	@echo " test                - run test suite"
-	@echo " archive             - create tarball of all sources"
+	@echo " all		    - build binaries"
+	@echo " clean		    - remove products of build"
+	@echo " distclean	    - remove configuration and build"
+	@echo " install		    - install binaries on local machine"
+	@echo " test		    - run test suite"
+	@echo " archive		    - create tarball of all sources"
 	@echo ""
 	@echo "Make Arguments:"
-	@echo " V=[0|1]             - set build verbosity level"
+	@echo " V=[0|1]		    - set build verbosity level"
 
 config.mk: configure
 	sh configure
@@ -76,16 +76,23 @@ distclean: clobber
 clean: check_submodule
 	@for i in $(SUBDIRS); \
 	do $(MAKE) -C $$i clean; done
+	@$(MAKE) -f xdp-trafficgen.mk clean
 
 install: all
 	@for i in $(SUBDIRS); \
 	do $(MAKE) -C $$i install; done
+	@$(MAKE) -f xdp-trafficgen.mk install
+
+xdp-trafficgen_install: xdp-trafficgen
+	@$(MAKE) -f xdp-trafficgen.mk install
 
 test: all
-	@for i in lib/libxdp xdp-trafficgen; do \
+	@for i in lib/libxdp; do \
 		echo; echo test $$i; $(MAKE) -C $$i test; \
 		if [ $$? -ne 0 ]; then failed="y"; fi; \
 	done; \
+	echo; echo test xdp-trafficgen; $(MAKE) -f xdp-trafficgen.mk test; \
+	if [ $$? -ne 0 ]; then failed="y"; fi; \
 	if [ ! -z $$failed ]; then exit 1; fi
 
 
