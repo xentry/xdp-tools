@@ -73,13 +73,12 @@ xdp-trafficgen_install: xdp-trafficgen
 
 test: all
 	@for i in libxdp; do \
-echo; echo test $$i; $(MAKE) -C $$i test; \
-if [ $$? -ne 0 ]; then failed="y"; fi; \
-done; \
-echo; echo test xdp-trafficgen; $(MAKE) -f xdp-trafficgen.mk test; \
-if [ $$? -ne 0 ]; then failed="y"; fi; \
-if [ ! -z $$failed ]; then exit 1; fi
-
+		echo; echo test $$i; $$(MAKE) -C $$i test; \
+		if [ $$? -ne 0 ]; then failed="y"; fi; \
+	done; \
+	echo; echo test xdp-trafficgen; $$(MAKE) -f xdp-trafficgen.mk test; \
+	if [ $$? -ne 0 ]; then failed="y"; fi; \
+	if [ ! -z $$failed ]; then exit 1; fi
 
 archive: xdp-tools-$(TOOLS_VERSION).tar.gz
 
