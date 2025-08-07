@@ -1,15 +1,11 @@
-# Common Makefile parts for BPF-building with libbpf
-# --------------------------------------------------
+# Common Makefile parts for building with libxdp
+# ----------------------------------------------
 # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-#
-# This file should be included from your Makefile like:
-#  LIB_DIR = ../lib/
-#  include $(LIB_DIR)/common.mk
 #
 # It is expected that you define the variables:
 #  XDP_TARGETS and USER_TARGETS
 # as a space-separated list
-#
+
 XDP_C = ${XDP_TARGETS:=.c}
 XDP_OBJ = ${XDP_C:.c=.o}
 BPF_SKEL_OBJ = ${BPF_SKEL_TARGETS:=.o}
@@ -22,18 +18,17 @@ XDP_OBJ_INSTALL ?= $(XDP_OBJ)
 MAN_FILES := $(MAN_PAGE)
 
 # Expect this is defined by including Makefile, but define if not
-LIB_DIR ?= ../lib
 LDLIBS ?= $(USER_LIBS)
 LDLIBS += -lm
 
-include $(LIB_DIR)/defines.mk
-include $(LIB_DIR)/libxdp/libxdp.mk
+include defines.mk
+include $(LIBXDP_DIR)/libxdp.mk
 
 # get list of objects in util
-include $(LIB_DIR)/util/util.mk
+include $(UTIL_DIR)/util.mk
 
 # Extend if including Makefile already added some
-LIB_OBJS += $(foreach obj,$(UTIL_OBJS),$(LIB_DIR)/util/$(obj))
+LIB_OBJS += $(foreach obj,$(UTIL_OBJS),$(UTIL_DIR)/$(obj))
 
 EXTRA_DEPS +=
 EXTRA_USER_DEPS +=
@@ -47,17 +42,12 @@ else
 	OBJECT_LIBXDP:=$(LIBXDP_DIR)/libxdp.a
 endif
 
-# Detect submodule libbpf source file changes
-ifeq ($(SYSTEM_LIBBPF),n)
-	LIBBPF_SOURCES := $(wildcard $(LIBBPF_DIR)/src/*.[ch])
-endif
-
 LIBXDP_SOURCES := $(wildcard $(LIBXDP_DIR)/*.[ch] $(LIBXDP_DIR)/*.in)
 
 # BPF-prog kern and userspace shares struct via header file:
 KERN_USER_H ?= $(wildcard common_kern_user.h)
 
-CFLAGS += -I$(HEADER_DIR) -I$(LIB_DIR)/util $(ARCH_INCLUDES)
+CFLAGS += -I$(HEADER_DIR) -I$(UTIL_DIR) $(ARCH_INCLUDES)
 BPF_CFLAGS += -I$(HEADER_DIR) $(ARCH_INCLUDES)
 
 BPF_HEADERS := $(wildcard $(HEADER_DIR)/bpf/*.h) $(wildcard $(HEADER_DIR)/xdp/*.h)
@@ -86,14 +76,11 @@ install: all install_local
 .PHONY: install_local
 install_local::
 
-$(OBJECT_LIBBPF): $(LIBBPF_SOURCES)
-	$(Q)$(MAKE) -C $(LIB_DIR) libbpf
-
 $(OBJECT_LIBXDP): $(LIBXDP_SOURCES)
 	$(Q)$(MAKE) -C $(LIBXDP_DIR)
 
 $(CONFIGMK):
-	$(Q)$(MAKE) -C $(LIB_DIR)/.. config.mk
+	$(Q)$(MAKE) config.mk
 
 # Create expansions for dependencies
 LIB_H := ${LIB_OBJS:.o=.h}
@@ -103,7 +90,7 @@ $(LIB_OBJS): %.o: %.c %.h $(LIB_H)
 	$(Q)$(MAKE) -C $(dir $@) $(notdir $@)
 
 ALL_EXEC_TARGETS=$(USER_TARGETS) $(TEST_TARGETS)
-$(ALL_EXEC_TARGETS): %: %.c  $(OBJECT_LIBBPF) $(OBJECT_LIBXDP) $(LIBMK) $(LIB_OBJS) $(KERN_USER_H) $(EXTRA_DEPS) $(EXTRA_USER_DEPS) $(BPF_SKEL_H) $(USER_EXTRA_C)
+$(ALL_EXEC_TARGETS): %: %.c  $(OBJECT_LIBXDP) $(LIBMK) $(LIB_OBJS) $(KERN_USER_H) $(EXTRA_DEPS) $(EXTRA_USER_DEPS) $(BPF_SKEL_H) $(USER_EXTRA_C)
 	$(QUIET_CC)$(CC) -Wall $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@ $(LIB_OBJS) \
 	 $< $(USER_EXTRA_C) $(LDLIBS)
 
@@ -114,14 +101,7 @@ $(BPF_SKEL_H): %.skel.h: %.bpf.o
 	$(QUIET_GEN)$(BPFTOOL) gen skeleton $< name $(notdir ${@:.skel.h=}) > $@
 
 .PHONY: man
-ifeq ($(EMACS),)
 man: ;
-else
-man: $(MAN_PAGE)
-$(MAN_PAGE): README.org $(LIBMK) $(LIB_DIR)/export-man.el
-	$(QUIET_GEN)$(EMACS) -Q --batch --load "$(LIB_DIR)/export-man.el" \
-		--eval "(export-man-page \"$@\" \"$<\" \"$(HAVE_FEATURES)\" \"v$(TOOLS_VERSION)\")"
-endif
 
 .PHONY: test
 ifeq ($(TEST_FILE),)

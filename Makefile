@@ -24,21 +24,17 @@ endif
 
 UTILS := xdp-trafficgen
 
-SUBDIRS := lib
-.PHONY: check_submodule help clobber distclean clean install test libxdp $(SUBDIRS) $(UTILS) xdp-trafficgen_install
+.PHONY: help clobber distclean clean install test libxdp $(UTILS) xdp-trafficgen_install
 
-all: $(SUBDIRS) $(UTILS)
+all: $(UTILS)
 
-lib: config.mk check_submodule
-	@echo; echo $@; $(MAKE) -C $@
-
-libxdp: config.mk check_submodule
-	@echo; echo lib; $(MAKE) -C lib $@
+libxdp: config.mk
+	@echo; echo libxdp; $(MAKE) -C libxdp
 
 libxdp_install: libxdp
-	@$(MAKE) -C lib $@
+	@$(MAKE) -C libxdp install
 
-$(UTILS): lib
+$(UTILS):
 	@echo; echo $@; $(MAKE) -f $@.mk
 
 help:
@@ -56,16 +52,6 @@ help:
 config.mk: configure
 	sh configure
 
-check_submodule:
-	@if [ -d .git ]; then \
-		if git submodule status lib/libbpf | grep -q '^+'; then \
-			echo ""; \
-			echo "** WARNING **: git submodule SHA-1 out-of-sync"; \
-			echo " consider running: git submodule update"; \
-			echo ""; \
-		fi; \
-	fi
-
 clobber:
 	touch config.mk
 	$(MAKE) clean
@@ -73,27 +59,26 @@ clobber:
 
 distclean: clobber
 
-clean: check_submodule
-	@for i in $(SUBDIRS); \
-	do $(MAKE) -C $$i clean; done
+clean:
+	@$(MAKE) -C libxdp clean
+	@$(MAKE) -C util clean
 	@$(MAKE) -f xdp-trafficgen.mk clean
 
 install: all
-	@for i in $(SUBDIRS); \
-	do $(MAKE) -C $$i install; done
+	@$(MAKE) -C libxdp install
 	@$(MAKE) -f xdp-trafficgen.mk install
 
 xdp-trafficgen_install: xdp-trafficgen
 	@$(MAKE) -f xdp-trafficgen.mk install
 
 test: all
-	@for i in lib/libxdp; do \
-		echo; echo test $$i; $(MAKE) -C $$i test; \
-		if [ $$? -ne 0 ]; then failed="y"; fi; \
-	done; \
-	echo; echo test xdp-trafficgen; $(MAKE) -f xdp-trafficgen.mk test; \
-	if [ $$? -ne 0 ]; then failed="y"; fi; \
-	if [ ! -z $$failed ]; then exit 1; fi
+	@for i in libxdp; do \
+echo; echo test $$i; $(MAKE) -C $$i test; \
+if [ $$? -ne 0 ]; then failed="y"; fi; \
+done; \
+echo; echo test xdp-trafficgen; $(MAKE) -f xdp-trafficgen.mk test; \
+if [ $$? -ne 0 ]; then failed="y"; fi; \
+if [ ! -z $$failed ]; then exit 1; fi
 
 
 archive: xdp-tools-$(TOOLS_VERSION).tar.gz

@@ -1,6 +1,3 @@
-LIB_DIR ?= ..
-include $(LIB_DIR)/defines.mk
-
 UTIL_OBJS := params.o logging.o util.o stats.o xpcapng.o
 UTIL_BPF_OBJS :=
 

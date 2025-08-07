@@ -1,8 +1,6 @@
 include util.mk
 
-LIB_DIR ?= ..
-
-include $(LIB_DIR)/defines.mk
+include ../defines.mk
 include $(LIBXDP_DIR)/libxdp.mk
 
 all: $(UTIL_OBJS)
@@ -10,7 +8,7 @@ all: $(UTIL_OBJS)
 UTIL_SKEL_H = $(UTIL_BPF_OBJS:.bpf.o=.skel.h)
 
 $(UTIL_OBJS): %.o: %.c %.h $(UTIL_SKEL_H) $(LIBMK)
-	$(QUIET_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -Wall -I../../headers -c -o $@ $<
+	$(QUIET_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -Wall -I$(HEADER_DIR) -c -o $@ $<
 
 clean:
 	$(Q)rm -f $(UTIL_OBJS) $(UTIL_BPF_OBJS) $(UTIL_SKEL_H) *.ll

@@ -10,10 +10,9 @@ EXTRA_USER_DEPS += test_utils.h
 TEST_FILE := ./test-libxdp.sh
 TEST_RUNNER := ./test_runner.sh
 
-LIB_DIR := ../..
 LDLIBS += $(USER_LIBS)
 
-include $(LIB_DIR)/defines.mk
+include ../../defines.mk
 
 ifeq ($(HAVE_CAP_NG),y)
 	USER_TARGETS += test_xsk_non_privileged
@@ -34,11 +33,6 @@ else
 	OBJECT_LIBXDP:=$(LIBXDP_DIR)/libxdp.a
 endif
 
-# Detect submodule libbpf source file changes
-ifeq ($(SYSTEM_LIBBPF),n)
-	LIBBPF_SOURCES := $(wildcard $(LIBBPF_DIR)/src/*.[ch])
-endif
-
 LIBXDP_SOURCES := $(wildcard $(LIBXDP_DIR)/*.[ch] $(LIBXDP_DIR)/*.in)
 
 CFLAGS += -I$(HEADER_DIR)
@@ -51,11 +45,8 @@ all: $(USER_TARGETS) $(BPF_OBJS)
 clean::
 	$(Q)rm -f $(USER_TARGETS) $(USER_OBJ)
 
-$(OBJECT_LIBBPF): $(LIBBPF_SOURCES)
-	$(Q)$(MAKE) -C $(LIB_DIR) libbpf
-
 $(OBJECT_LIBXDP): $(LIBXDP_SOURCES)
-	$(Q)$(MAKE) -C $(LIBXDP_DIR)
+        $(Q)$(MAKE) -C $(LIBXDP_DIR)
 
 # Create expansions for dependencies
 LIB_H := ${LIB_OBJS:.o=.h}
@@ -65,9 +56,9 @@ $(LIB_OBJS): %.o: %.c %.h $(LIB_H)
 	$(Q)$(MAKE) -C $(dir $@) $(notdir $@)
 
 ALL_EXEC_TARGETS=$(USER_TARGETS)
-$(ALL_EXEC_TARGETS): %: %.c  $(OBJECT_LIBBPF) $(OBJECT_LIBXDP) $(LIBMK) $(LIB_OBJS) $(EXTRA_DEPS) $(EXTRA_USER_DEPS)
+$(ALL_EXEC_TARGETS): %: %.c  $(OBJECT_LIBXDP) $(LIBMK) $(LIB_OBJS) $(EXTRA_DEPS) $(EXTRA_USER_DEPS)
 	$(QUIET_CC)$(CC) -Wall $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@ $(LIB_OBJS) \
-	 $< $(LDLIBS)
+         $< $(LDLIBS)
 
 $(BPF_OBJS): %.o: %.c $(BPF_HEADERS) $(LIBMK) $(EXTRA_DEPS)
 	$(QUIET_CLANG)$(CLANG) -target $(BPF_TARGET) $(BPF_CFLAGS) -O2 -c -g -o $@ $<
