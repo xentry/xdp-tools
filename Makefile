@@ -51,7 +51,7 @@ check_submodule:
 		echo "** WARNING **: git submodule SHA-1 out-of-sync" ;\
 		echo " consider running: git submodule update"  ;\
 		echo "" ;\
-	fi\
+	fi
 
 clobber:
 	touch config.mk
