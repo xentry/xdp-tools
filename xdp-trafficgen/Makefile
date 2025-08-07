@@ -16,6 +16,9 @@ EXTRA_DEPS := xdp-trafficgen.h
 USER_LIBS     = -lpthread
 TEST_FILE := tests/test-xdp-trafficgen.sh
 
+LIB_DIR ?= ../lib
+CFLAGS += -I$(LIB_DIR)
+
 include ../lib/common.mk
 
 $(USER_OBJS): %.o: %.c $(KERN_USER_H) $(EXTRA_DEPS) $(BPF_SKEL_H)
