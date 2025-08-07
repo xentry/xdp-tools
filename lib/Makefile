@@ -4,7 +4,7 @@ LIBBPF_CFLAGS:=$(if $(CFLAGS),$(CFLAGS),-g -O2 -Werror -Wall) -fPIC
 LIB_DIR = .
 include defines.mk
 
-SUBDIRS=util testing
+SUBDIRS=testing
 .PHONY: $(SUBDIRS)
 
 all: $(SUBDIRS) libxdp
@@ -12,7 +12,7 @@ all: $(SUBDIRS) libxdp
 util: libxdp
 	@echo; echo "  $@"; $(MAKE) -C $@
 
-testing: libxdp util
+testing: libxdp
 	@echo; echo "  $@"; $(MAKE) -C $@
 
 .PHONY: libxdp
