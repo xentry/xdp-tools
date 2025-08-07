@@ -33,10 +33,10 @@
 #include <linux/tcp.h>
 #include <linux/netdev.h>
 
-#include "params.h"
-#include "logging.h"
-#include "util.h"
-#include "xdp_sample.h"
+#include "util/params.h"
+#include "util/logging.h"
+#include "util/util.h"
+#include "util/xdp_sample.h"
 #include "xdp-trafficgen.h"
 
 #include "xdp_trafficgen.skel.h"
