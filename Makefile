@@ -57,12 +57,14 @@ config.mk: configure
 	sh configure
 
 check_submodule:
-	@if [ -d .git ] && `git submodule status lib/libbpf | grep -q '^+'`; then \
-		echo "" ;\
-		echo "** WARNING **: git submodule SHA-1 out-of-sync" ;\
-		echo " consider running: git submodule update"  ;\
-		echo "" ;\
-	fi\
+	@if [ -d .git ]; then \
+		if git submodule status lib/libbpf | grep -q '^+'; then \
+			echo ""; \
+			echo "** WARNING **: git submodule SHA-1 out-of-sync"; \
+			echo " consider running: git submodule update"; \
+			echo ""; \
+		fi; \
+	fi
 
 clobber:
 	touch config.mk
