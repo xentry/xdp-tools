@@ -1,7 +1,7 @@
-include util.mk
-
 include ../defines.mk
 include $(LIBXDP_DIR)/libxdp.mk
+
+include util.mk
 
 all: $(UTIL_OBJS)
 
