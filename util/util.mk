@@ -1,4 +1,4 @@
-UTIL_OBJS := params.o logging.o util.o xpcapng.o
+UTIL_OBJS := params.o logging.o util.o
 UTIL_BPF_OBJS :=
 
 ifneq ($(BPFTOOL),)
