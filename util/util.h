@@ -56,43 +56,12 @@
 #endif
 
 int try_snprintf(char *buf, size_t buf_len, const char *format, ...);
-int make_dir_subdir(const char *parent, const char *dir);
 
 int check_bpf_environ(void);
-int double_rlimit(void);
-
-int attach_xdp_program(struct xdp_program *prog, const struct iface *iface,
-		       enum xdp_attach_mode mode, const char *pin_root_dir);
-int detach_xdp_program(struct xdp_program *prog, const struct iface *iface,
-		       enum xdp_attach_mode mode, const char *pin_root_dir);
-
-int find_bpf_file(char *buf, size_t buf_size, const char *progname);
-struct bpf_object *open_bpf_file(const char *progname,
-				 struct bpf_object_open_opts *opts);
-
-typedef int (*program_callback)(const struct iface *iface,
-				struct xdp_program *prog,
-				enum xdp_attach_mode mode, void *arg);
-typedef int (*multiprog_callback)(const struct iface *iface,
-				  const struct xdp_multiprog *mp, void *arg);
-int get_pinned_program(const struct iface *iface, const char *pin_root_path,
-		       enum xdp_attach_mode *mode, struct xdp_program **prog);
-int iterate_pinned_programs(const char *pin_root_path, program_callback cb,
-			    void *arg);
-int iterate_iface_multiprogs(multiprog_callback cb, void *arg);
 
 int get_bpf_root_dir(char *buf, size_t buf_len, const char *subdir, bool fatal);
-int get_pinned_map_fd(const char *bpf_root, const char *map_name,
-		      struct bpf_map_info *info);
-int unlink_pinned_map(int dir_fd, const char *map_name);
-
-const char *action2str(__u32 action);
-
-int prog_lock_acquire(const char *directory);
-int prog_lock_release(int lock_fd);
 
 const char *get_libbpf_version(void);
-int iface_print_status(const struct iface *iface);
 int iface_get_xdp_feature_flags(int ifindex, __u64 *feature_flags);
 
 
