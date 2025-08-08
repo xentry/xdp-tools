@@ -1,9 +1,7 @@
 # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 
-LIB_DIR = ..
-
+include ../defines.mk
 include libxdp.mk
-include $(LIB_DIR)/defines.mk
 
 OBJDIR ?= .
 SHARED_OBJDIR := $(OBJDIR)/sharedobjs
@@ -23,7 +21,7 @@ SHARED_CFLAGS += -fPIC -DSHARED
 STATIC_CFLAGS += -D LIBXDP_STATIC=1
 LIB_HEADERS := $(wildcard $(HEADER_DIR)/xdp/*.h)
 BPF_HEADERS := $(wildcard $(HEADER_DIR)/bpf/*.h) $(wildcard $(HEADER_DIR)/xdp/*.h)
-EXTRA_LIB_DEPS := $(OBJECT_LIBBPF) $(LIBMK) $(LIB_OBJS) $(LIB_HEADERS) compat.h libxdp_internal.h xsk_def_xdp_prog.h bpf_instr.h
+EXTRA_LIB_DEPS := $(LIBMK) $(LIB_OBJS) $(LIB_HEADERS) compat.h libxdp_internal.h xsk_def_xdp_prog.h bpf_instr.h
 PC_FILE := $(OBJDIR)/libxdp.pc
 TEMPLATED_SOURCES := xdp-dispatcher.c
 
@@ -87,10 +85,10 @@ $(SHARED_OBJDIR):
 	$(Q)mkdir -p $(SHARED_OBJDIR)
 
 $(STATIC_OBJDIR)/%.o: %.c $(EXTRA_LIB_DEPS) | $(STATIC_OBJDIR)
-	$(QUIET_CC)$(CC) $(CFLAGS) $(CPPFLAGS) $(STATIC_CFLAGS) -Wall -I../../headers -c $< -o $@
+	$(QUIET_CC)$(CC) $(CFLAGS) $(CPPFLAGS) $(STATIC_CFLAGS) -Wall -I$(HEADER_DIR) -c $< -o $@
 
 $(SHARED_OBJDIR)/%.o: %.c $(EXTRA_LIB_DEPS) | $(SHARED_OBJDIR)
-	$(QUIET_CC)$(CC) $(CFLAGS) $(CPPFLAGS) $(SHARED_CFLAGS) -Wall -I../../headers -c $< -o $@
+	$(QUIET_CC)$(CC) $(CFLAGS) $(CPPFLAGS) $(SHARED_CFLAGS) -Wall -I$(HEADER_DIR) -c $< -o $@
 
 XDP_IN_SHARED	:= $(SHARED_OBJDIR)/libxdp.o $(SHARED_OBJDIR)/xsk.o
 

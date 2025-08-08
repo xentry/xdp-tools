@@ -18,9 +18,7 @@ if git status -s | grep -Eq '^ ?[AM]'; then
 fi
 
 git archive -o "$TMPDIR/xdp-tools.tar.gz" --prefix "${PREFIX}/" HEAD
-( cd lib/libbpf && git archive -o "$TMPDIR/libbpf.tar.gz" --prefix "${PREFIX}/lib/libbpf/" HEAD)
 tar -C "$TMPDIR" -xzf "$TMPDIR/xdp-tools.tar.gz"
-tar -C "$TMPDIR" -xzf "$TMPDIR/libbpf.tar.gz"
 tar -C "$TMPDIR" -czf "$OUTFILE" "$PREFIX"
 
 

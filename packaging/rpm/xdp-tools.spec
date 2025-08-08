@@ -74,7 +74,7 @@ export DYNAMIC_LIBXDP=1
 export FORCE_SYSTEM_LIBBPF=1
 export FORCE_EMACS=1
 ./configure
-make lib xdp-trafficgen %{?_smp_mflags} V=1
+make libxdp xdp-trafficgen %{?_smp_mflags} V=1
 
 %install
 export DESTDIR='%{buildroot}'

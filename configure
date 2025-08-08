@@ -229,18 +229,13 @@ check_libbpf_function()
 
     echo -n "  $FUNCTION_NAME support: "
 
-    # If LIBBPF_LDLIBS is empty that means we're using the submodule version of
-    # libbpf. We know it does support all the APIs we're testing for, so we hard
-    # code it as supported. We can't actually run the check as the embedded
-    # libbpf.a has not been built at configure time.
     if [ -z "$LIBBPF_LDLIBS" ]; then
         echo "HAVE_FEATURES+=${config_var}" >>"$CONFIG"
-        echo "yes (submodule)"
+        echo "yes"
         return 0;
     fi
 
-    # If this is set we don't try to link against libbpf, as it may be in a
-    # different submodule and have not been built yet. Instead, we'll copy over
+    # If this is set we don't try to link against libbpf. Instead, we'll copy over
     # the header files from the libbpf sources so those are used first,
     # triggering a compile error if the function we are testing for is missing.
     if [ -n "$LIBBPF_UNBUILT" ]; then
@@ -319,7 +314,7 @@ check_libbpf()
 {
     local libbpf_err
 
-    if [ "${FORCE_SUBDIR_LIBBPF:-0}" -ne "1" ] && ${PKG_CONFIG} libbpf --exists && [ -z "$LIBBPF_DIR" ]; then
+    if ${PKG_CONFIG} libbpf --exists && [ -z "$LIBBPF_DIR" ]; then
 
         LIBBPF_CFLAGS=$(${PKG_CONFIG} libbpf --cflags)
         LIBBPF_LDLIBS=$(${PKG_CONFIG} libbpf --libs)
@@ -356,13 +351,6 @@ EOF
         libbpf_err="${PKG_CONFIG} couldn't find libbpf"
     fi
 
-    if [ "${FORCE_SYSTEM_LIBBPF:-0}" -eq "1" ]; then
-        echo "FORCE_SYSTEM_LIBBPF is set, but no usable libbpf found on system"
-        echo "error: $libbpf_err"
-        rm -f "$CONFIG"
-        exit 1
-    fi
-
     if [ -n "$LIBBPF_DIR" ]; then
         [ -z "$LIBBPF_INCLUDE_DIR" ] && LIBBPF_INCLUDE_DIR="$(readlink -m ${LIBBPF_DIR}/include)"
         [ -z "$LIBBPF_LIB_DIR" ] && LIBBPF_LIB_DIR="$(readlink -m ${LIBBPF_DIR}/src)"
@@ -370,26 +358,20 @@ EOF
         OBJECT_LIBBPF=
         echo "custom v$LIBBPF_VERSION"
         check_libbpf_functions "-I${LIBBPF_INCLUDE_DIR}" "-L${LIBBPF_LIB_DIR} -l:libbpf.a"
+
+        echo "SYSTEM_LIBBPF:=n" >> $CONFIG
+        echo "LIBBPF_VERSION=$LIBBPF_VERSION" >>$CONFIG
+        echo "CFLAGS += -I${LIBBPF_INCLUDE_DIR}" >>$CONFIG
+        echo "BPF_CFLAGS += -I${LIBBPF_INCLUDE_DIR}" >>$CONFIG
+        echo "LDFLAGS += -L${LIBBPF_LIB_DIR}" >>$CONFIG
+        echo 'LDLIBS += -l:libbpf.a' >>$CONFIG
+        echo "OBJECT_LIBBPF = ${OBJECT_LIBBPF}" >>$CONFIG
     else
-        if ! [ -d "lib/libbpf/src" ] && [ -f ".gitmodules" ] && [ -e ".git" ]; then
-            git submodule init && git submodule update
-        fi
-
-        LIBBPF_VERSION=$(get_libbpf_version "lib/libbpf/src")
-        LIBBPF_INCLUDE_DIR='$(LIB_DIR)/libbpf/src/root/include'
-        LIBBPF_LIB_DIR='$(LIB_DIR)/libbpf/src'
-        OBJECT_LIBBPF="${LIBBPF_LIB_DIR}/libbpf.a"
-        echo "submodule v$LIBBPF_VERSION"
-        check_libbpf_functions "" ""
+        echo "No usable libbpf found"
+        echo "error: $libbpf_err"
+        rm -f "$CONFIG"
+        exit 1
     fi
-
-    echo "SYSTEM_LIBBPF:=n" >> $CONFIG
-    echo "LIBBPF_VERSION=$LIBBPF_VERSION" >>$CONFIG
-    echo "CFLAGS += -I${LIBBPF_INCLUDE_DIR}" >>$CONFIG
-    echo "BPF_CFLAGS += -I${LIBBPF_INCLUDE_DIR}" >>$CONFIG
-    echo "LDFLAGS += -L${LIBBPF_LIB_DIR}" >>$CONFIG
-    echo 'LDLIBS += -l:libbpf.a' >>$CONFIG
-    echo "OBJECT_LIBBPF = ${OBJECT_LIBBPF}" >>$CONFIG
 
     echo -n "zlib support: "
     check_zlib || exit 1

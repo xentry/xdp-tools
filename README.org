@@ -3,13 +3,11 @@
 This repository contains the =libxdp= library for working with the eXpress Data Path (XDP) facility of the Linux kernel and the =xdp-trafficgen= utility for generating traffic.
 
 ** Repository layout
-- [[lib/libxdp/][libxdp]] - XDP helper library.
+- [[libxdp/][libxdp]] - XDP helper library.
 - xdp-trafficgen - XDP-based packet generator.
 
 ** Building
-The project requires a modern LLVM/clang toolchain, =libelf=, =pkg-config= and =zlib=. If =libbpf= is not installed, fetch the bundled submodule with:
-
-  git submodule update --init --recursive
+The project requires a modern LLVM/clang toolchain, =libelf=, =pkg-config=, =zlib= and the =libbpf= development headers.
 
 Run the usual autotools build from the repository root:
 

@@ -59,8 +59,6 @@ To release a new version of xdp-tools, follow these steps:
 4. Run =make archive= to generate a source tarball (xdp-tools-$VERSION.tar.gz).
    #+begin_src sh
    cd $XDP_TOOLS_DIR
-   git submodule init
-   git submodule update
    make archive
    #+end_src
 
